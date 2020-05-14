@@ -3,7 +3,8 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+const apiCall = axios.get('https://api.github.com/users/PauloFurtunatoAlexandre');
+console.log(apiCall);
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
