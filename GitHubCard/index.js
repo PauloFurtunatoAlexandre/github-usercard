@@ -3,8 +3,7 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-const paulo = axios.get('https://api.github.com/users/PauloFurtunatoAlexandre');
-console.log(paulo);
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -12,12 +11,74 @@ console.log(paulo);
 
     Skip to STEP 3.
 */
+const gitCard = (image, fullName, userLocation, link, allFollowers, allFollowing, summary) => {
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+  const profileLink = document.createElement('a');
 
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
+
+  img.setAttribute('src', image); 
+  name.textContent = fullName;
+  location.textContent = `Location: ${userLocation}`;
+  profileLink.textContent = 'Click here';
+  profileLink.setAttribute('href', link)
+  profile.textContent = `Profile: `;
+  followers.textContent = `Followers: ${allFollowers}`;
+  following.textContent = `Following: ${allFollowing}`;
+  bio.textContent = `Bio: ${summary}`;
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(bio);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  profile.appendChild(profileLink);
+
+  return card;
+}
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
 
+const entryPoint = document.querySelector('.cards');
+
+axios.get('https://cors-anywhere.herokuapp.com/https://api.github.com/users/PauloFurtunatoAlexandre')
+  .then(response => {
+    const dataItem = response.data;
+    
+    const newGitCard = gitCard(
+      dataItem['avatar_url'], 
+      dataItem['name'], 
+      dataItem['location'], 
+      dataItem['url'], 
+      dataItem['followers'], 
+      dataItem['following'], 
+      dataItem['bio']
+      );
+
+    entryPoint.appendChild(newGitCard);
+  
+  })
+  .catch(err => {
+    alert('Something did not work well!');
+  });
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -29,7 +90,74 @@ console.log(paulo);
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const gitCardOtherUsers = (image, fullName, userLocation, link, allFollowers, allFollowing, summary) => {
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+  const profileLink = document.createElement('a');
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
+
+  img.setAttribute('src', image); 
+  name.textContent = fullName;
+  location.textContent = `Location: ${userLocation}`;
+  profileLink.textContent = 'Click here';
+  profileLink.setAttribute('href', link)
+  profile.textContent = `Profile: `;
+  followers.textContent = `Followers: ${allFollowers}`;
+  following.textContent = `Following: ${allFollowing}`;
+  bio.textContent = `Bio: ${summary}`;
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(bio);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  profile.appendChild(profileLink);
+
+  return card;
+}
+
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+followersArray.forEach((item) => {
+  const otherGithubUsers = `https://cors-anywhere.herokuapp.com/https://api.github.com/users/${item}`;
+
+  axios.get(otherGithubUsers)
+  .then(response => {
+    const dataItem = response.data;
+    
+    const newGitCard = gitCard(
+      dataItem['avatar_url'], 
+      dataItem['name'], 
+      dataItem['location'], 
+      dataItem['url'], 
+      dataItem['followers'], 
+      dataItem['following'], 
+      dataItem['bio']
+      );
+
+    entryPoint.appendChild(newGitCard);
+  
+  })
+  .catch(err => {
+    alert('Something did not work well!');
+  });
+});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
