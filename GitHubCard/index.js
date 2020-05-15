@@ -11,7 +11,7 @@
 
     Skip to STEP 3.
 */
-const gitCard = (image, fullName, userLocation, link, allFollowers, allFollowing, summary) => {
+const gitCard = (image, fullName, login, userLocation, link, allFollowers, allFollowing, summary) => {
   const card = document.createElement('div');
   const img = document.createElement('img');
   const cardInfo = document.createElement('div');
@@ -23,14 +23,11 @@ const gitCard = (image, fullName, userLocation, link, allFollowers, allFollowing
   const following = document.createElement('p');
   const bio = document.createElement('p');
   const profileLink = document.createElement('a');
-
-  card.classList.add('card');
-  cardInfo.classList.add('card-info');
-  name.classList.add('name');
-  userName.classList.add('username');
+  const ghGraph = document.createElement('img');
 
   img.setAttribute('src', image); 
   name.textContent = fullName;
+  userName.textContent = login;
   location.textContent = `Location: ${userLocation}`;
   profileLink.textContent = 'Click here';
   profileLink.setAttribute('href', link)
@@ -38,6 +35,9 @@ const gitCard = (image, fullName, userLocation, link, allFollowers, allFollowing
   followers.textContent = `Followers: ${allFollowers}`;
   following.textContent = `Following: ${allFollowing}`;
   bio.textContent = `Bio: ${summary}`;
+  ghGraph.setAttribute('src', 'http://ghchart.rshah.org/PauloFurtunatoAlexandre');
+  ghGraph.style.width = '100%';
+  ghGraph.classList.add('graph');
 
   card.appendChild(img);
   card.appendChild(cardInfo);
@@ -48,7 +48,13 @@ const gitCard = (image, fullName, userLocation, link, allFollowers, allFollowing
   cardInfo.appendChild(bio);
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
+  cardInfo.appendChild(ghGraph);
   profile.appendChild(profileLink);
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
 
   return card;
 }
@@ -66,6 +72,7 @@ axios.get('https://cors-anywhere.herokuapp.com/https://api.github.com/users/Paul
     const newGitCard = gitCard(
       dataItem['avatar_url'], 
       dataItem['name'], 
+      dataItem['login'],
       dataItem['location'], 
       dataItem['url'], 
       dataItem['followers'], 
@@ -90,7 +97,7 @@ axios.get('https://cors-anywhere.herokuapp.com/https://api.github.com/users/Paul
     user, and adding that card to the DOM.
 */
 
-const gitCardOtherUsers = (image, fullName, userLocation, link, allFollowers, allFollowing, summary) => {
+const gitCardOtherUsers = (image, fullName, login, userLocation, link, allFollowers, allFollowing, summary, item) => {
   const card = document.createElement('div');
   const img = document.createElement('img');
   const cardInfo = document.createElement('div');
@@ -102,11 +109,9 @@ const gitCardOtherUsers = (image, fullName, userLocation, link, allFollowers, al
   const following = document.createElement('p');
   const bio = document.createElement('p');
   const profileLink = document.createElement('a');
+  const ghGraphOthers = document.createElement('img');
 
-  card.classList.add('card');
-  cardInfo.classList.add('card-info');
-  name.classList.add('name');
-  userName.classList.add('username');
+  const dynamicLink = `http://ghchart.rshah.org/${item}`;
 
   img.setAttribute('src', image); 
   name.textContent = fullName;
@@ -117,6 +122,11 @@ const gitCardOtherUsers = (image, fullName, userLocation, link, allFollowers, al
   followers.textContent = `Followers: ${allFollowers}`;
   following.textContent = `Following: ${allFollowing}`;
   bio.textContent = `Bio: ${summary}`;
+  ghGraphOthers.setAttribute('src', dynamicLink);
+  ghGraphOthers.style.width = '100%';
+  ghGraphOthers.classList.add('graph');
+  card.classList.add('card');
+  userName.textContent = login;
 
   card.appendChild(img);
   card.appendChild(cardInfo);
@@ -127,12 +137,18 @@ const gitCardOtherUsers = (image, fullName, userLocation, link, allFollowers, al
   cardInfo.appendChild(bio);
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
+  cardInfo.appendChild(ghGraphOthers);
   profile.appendChild(profileLink);
+
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
 
   return card;
 }
 
-const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+const followersArray = ['slroberts', 'reidysj', 'Jfadelli', 'angelabauer', 'diego3g'];
 
 followersArray.forEach((item) => {
   const otherGithubUsers = `https://cors-anywhere.herokuapp.com/https://api.github.com/users/${item}`;
@@ -141,14 +157,16 @@ followersArray.forEach((item) => {
   .then(response => {
     const dataItem = response.data;
     
-    const newGitCard = gitCard(
+    const newGitCard = gitCardOtherUsers(
       dataItem['avatar_url'], 
-      dataItem['name'], 
+      dataItem['name'],
+      dataItem['login'],
       dataItem['location'], 
       dataItem['url'], 
       dataItem['followers'], 
       dataItem['following'], 
-      dataItem['bio']
+      dataItem['bio'],
+      item
       );
 
     entryPoint.appendChild(newGitCard);

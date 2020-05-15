@@ -51,7 +51,7 @@ table {
 /* Reset above, our CSS below */
 
 html, body, * {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   box-sizing: border-box;
 }
 
@@ -102,8 +102,8 @@ body {
 }
 
 .card img {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   border-radius: 3px;
   margin-right: 20px;
 }
@@ -115,6 +115,7 @@ body {
 .card p {
   font-size: 1.4rem;
   margin-bottom: 3px;
+  line-height: 1.5rem;
 }
 
 .card .username {
@@ -123,5 +124,11 @@ body {
   margin: 3px 0 10px;
 }
 
+img.graph {
+  height: 75px;
+}
 
+p.strong {
+  font-weight: 700;
+}
 
